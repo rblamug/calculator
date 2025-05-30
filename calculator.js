@@ -29,12 +29,38 @@ function operate(num1, num2, operator) {
 
 // Event Listeners for each calculator button
 const numberButtons = document.querySelectorAll('.num');
+const operatorButtons = document.querySelectorAll('.operator');
 const displayScreen = document.querySelector('#display');
+let buttonsClicked = 0;
+
+// function getFirstNumber() {
+//     numberButtons.forEach(button => {
+//         button.addEventListener("click", (e) => {
+//             if (buttonsClicked < 10) {
+//                 if (displayScreen.textContent == 0) {
+//                     displayScreen.textContent = e.target.textContent;
+//                     buttonsClicked++;
+//                 } else {
+//                     displayScreen.TextContent += e.target.textContent;
+//                     buttonsClicked++;
+//                 }
+//             }
+//         })
+//     })
+// }
+
+// getFirstNumber();
 
 numberButtons.forEach(button => {
     button.addEventListener("click", (e) => {
-        console.log(e.target.textContent);
-        displayScreen.textContent += e.target.textContent;
-    });
-});
-
+        if (buttonsClicked < 10) {
+            if (displayScreen.textContent == 0) {
+                displayScreen.textContent = e.target.textContent;
+                buttonsClicked++;
+            } else {
+                displayScreen.textContent += e.target.textContent;
+                buttonsClicked++;
+            }
+        }
+    })
+})
