@@ -26,3 +26,15 @@ function operate(num1, num2, operator) {
         default:
     }
 }
+
+// Event Listeners for each calculator button
+const numberButtons = document.querySelectorAll('.num');
+const displayScreen = document.querySelector('#display');
+
+numberButtons.forEach(button => {
+    button.addEventListener("click", (e) => {
+        console.log(e.target.textContent);
+        displayScreen.textContent += e.target.textContent;
+    });
+});
+

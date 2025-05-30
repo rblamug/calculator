@@ -36,7 +36,7 @@ div {
     border: none;
 }
 
-.btn {
+.num, .operator, .equal {
     width: 84px;
     height: 81px;
     font-size: 25px;
