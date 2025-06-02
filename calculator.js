@@ -13,6 +13,7 @@ function operate(num1, num2, operator) {
     switch (operator) {
         case "+":
             //displayScreen.textContent = cal.add(num1, num2);
+            return cal.add(num1, num2, operator);
             console.log(cal.add(num1, num2))
             console.log(firstNumber);
             console.log(secondNumber);
@@ -76,21 +77,20 @@ if(displayScreen.textContent == 0) {
 operatorButtons.forEach(button => {
     button.addEventListener("click", (e) => {
         if (hasFirstNumber == false) {
-            firstNumber = displayScreen.textContent;
+            firstNumber = Number(displayScreen.textContent);
             op = e.target.textContent;
             hasFirstNumber = true;
             buttonsClicked = 0;
             getSecondNumber();
         } else if (hasFirstNumber == true && hasSecondNumber == false) {
+            secondNumber = Number(displayScreen.textContent);
             hasSecondNumber = true;
-            secondNumber = displayScreen.textContent;
-            buttonsClicked = 0;
-        } else if (hasFirstNumber == true && hasSecondNumber == true) {
             firstNumber = operate(firstNumber, secondNumber, op);
             op = e.target.textContent;
-            hasSecondNumber = false;
+            displayScreen.textContent = firstNumber;
             buttonsClicked = 0;
             getSecondNumber();
         }
     })
 });
+
