@@ -34,6 +34,7 @@ let hasFirstNumber = false;
 let hasSecondNumber = false;
 
 function getFirstNumber() {
+    hasFirstNumber = false;
     numberButtons.forEach(button => {
         button.addEventListener("click", (e) => {
             if (buttonsClicked < 10 && hasFirstNumber == false) {
@@ -51,17 +52,17 @@ function getFirstNumber() {
 }
 
 function getSecondNumber() {
+    hasSecondNumber = false;
     numberButtons.forEach(button => {
         button.addEventListener("click", (e) => {
-            if (buttonsClicked < 10 && secondNumber == false) {
+            if (buttonsClicked < 10 && hasSecondNumber == false) {
                 if (displayScreen.textContent == firstNumber) {
+                    console.log(displayScreen.textContent == firstNumber); // <--- stop the function when a second oeprator is clicked
                     displayScreen.textContent = e.target.textContent;
                 } else {
                     displayScreen.textContent += e.target.textContent;
                 }
                 buttonsClicked++;
-                //secondNumber = Number(displayScreen.textContent);
-                //console.log(secondNumber);
             }
         })
     })
@@ -74,20 +75,18 @@ if(displayScreen.textContent == 0) {
 operatorButtons.forEach(button => {
     button.addEventListener("click", (e) => {
         if (hasFirstNumber == false) {
-            //firstNumber = Number(displayScreen.textContent);
             op = e.target.textContent;
             console.log(op);
             hasFirstNumber = true;
             buttonsClicked = 0;
             getSecondNumber();
-        } else if (hasFirstNumber == true && hasSecondNumber == false) {
-            //secondNumber = Number(displayScreen.textContent);
-            hasSecondNumber = true;
+        } else if (hasFirstNumber == true && buttonsClicked > 0) {
+            secondNumber = Number(displayScreen.textContent);
+            console.log(secondNumber);
             firstNumber = operate(firstNumber, secondNumber, op);
             op = e.target.textContent;
             displayScreen.textContent = firstNumber;
             buttonsClicked = 0;
-            getSecondNumber();
         }
     })
 });
