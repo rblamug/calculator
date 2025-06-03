@@ -12,8 +12,7 @@ let op = "";
 function operate(num1, num2, operator) {
     switch (operator) {
         case "+":
-            //displayScreen.textContent = cal.add(num1, num2);
-            return cal.add(num1, num2, operator);
+            return cal.add(num1, num2);
         case "-":
             return cal.sub(num1, num2);
         case "x":
@@ -33,60 +32,51 @@ let buttonsClicked = 0;
 let hasFirstNumber = false;
 let hasSecondNumber = false;
 
-function getFirstNumber() {
-    hasFirstNumber = false;
-    numberButtons.forEach(button => {
-        button.addEventListener("click", (e) => {
-            if (buttonsClicked < 10 && hasFirstNumber == false) {
-                if (displayScreen.textContent == 0) {
-                    displayScreen.textContent = e.target.textContent;
-                } else {
-                    displayScreen.textContent += e.target.textContent;
-                }
-                buttonsClicked++;
-                firstNumber = Number(displayScreen.textContent);
-                console.log(firstNumber);
-            }
-        })
-    })
+function getNum(e) {
+    if (buttonsClicked < 10 && hasFirstNumber == false) {
+        if (displayScreen.textContent == 0) {
+            displayScreen.textContent = e.target.textContent;
+        } else {
+            displayScreen.textContent += e.target.textContent;
+        }
+        buttonsClicked++;
+    } else if (buttonsClicked < 10 && hasFirstNumber == true) {
+        if(displayScreen.textContent == firstNumber) {
+            displayScreen.textContent = e.target.textContent;
+        } else {
+            displayScreen.textContent += e.target.textContent;
+        }
+        buttonsClicked++;
+    }
 }
 
-function getSecondNumber() {
-    hasSecondNumber = false;
+function getNumber() {
     numberButtons.forEach(button => {
-        button.addEventListener("click", (e) => {
-            if (buttonsClicked < 10 && hasSecondNumber == false) {
-                if (displayScreen.textContent == firstNumber) {
-                    console.log(displayScreen.textContent == firstNumber); // <--- stop the function when a second oeprator is clicked
-                    displayScreen.textContent = e.target.textContent;
-                } else {
-                    displayScreen.textContent += e.target.textContent;
-                }
-                buttonsClicked++;
-            }
-        })
-    })
+        button.addEventListener('click', getNum);
+    });
 }
 
+// Start getNumber function if calculator shows 0
 if(displayScreen.textContent == 0) {
-    getFirstNumber();
+    getNumber();
 }
 
+// Event Listeners for operator buttons 
 operatorButtons.forEach(button => {
     button.addEventListener("click", (e) => {
         if (hasFirstNumber == false) {
+            firstNumber = Number(displayScreen.textContent);
             op = e.target.textContent;
-            console.log(op);
             hasFirstNumber = true;
             buttonsClicked = 0;
-            getSecondNumber();
         } else if (hasFirstNumber == true && buttonsClicked > 0) {
             secondNumber = Number(displayScreen.textContent);
-            console.log(secondNumber);
             firstNumber = operate(firstNumber, secondNumber, op);
             op = e.target.textContent;
             displayScreen.textContent = firstNumber;
             buttonsClicked = 0;
+        } else {
+            return;
         }
     })
 });
@@ -95,7 +85,12 @@ operatorButtons.forEach(button => {
 equalButton.addEventListener('click', () => {
     if (hasFirstNumber == true) {
         secondNumber = Number(displayScreen.textContent);
-        console.log(secondNumber);
         displayScreen.textContent = operate(firstNumber, secondNumber, op);
+        hasFirstNumber = false;
+    } else if (hasFirstNumber == false && op !== "") {
+        secondNumber = Number(displayScreen.textContent);
+        displayScreen.textContent = operate(firstNumber, secondNumber, op);
+    } else {
+        return;
     }
 });
