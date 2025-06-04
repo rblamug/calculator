@@ -18,7 +18,11 @@ function operate(num1, num2, operator) {
         case "x":
             return cal.mul(num1, num2);
         case "/":
-            return cal.div(num1, num2);
+            if (secondNumber === 0) {
+                return "Lol no..";
+            } else {
+                return cal.div(num1, num2);
+            }
         default:
     }
 }
@@ -66,7 +70,7 @@ topButtons.forEach(button => {
 
 function getNum(e) {
     if (buttonsClicked < 10 && hasFirstNumber == false) {
-        if (displayScreen.textContent == 0) {
+        if (displayScreen.textContent == 0 || displayScreen.textContent == answer) {
             displayScreen.textContent = e.target.textContent;
         } else {
             displayScreen.textContent += e.target.textContent;
