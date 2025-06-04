@@ -52,7 +52,11 @@ function topRowFunction(e) {
             break;
         case "back":
             displayScreen.textContent = displayScreen.textContent.slice(0, -1);
-            buttonsClicked--;
+            if (buttonsClicked > 0) {
+                buttonsClicked--;
+            }
+            break;
+        default:
     }
 };
 
