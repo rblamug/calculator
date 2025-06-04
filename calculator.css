@@ -36,8 +36,12 @@ div {
     border: none;
 }
 
-.num, .operator, .equal {
-    width: 84px;
-    height: 81px;
+.num, .operator, .equal, .topRow{
+    width: 85px;
+    height: 68px;
     font-size: 25px;
+}
+
+#backspace {
+    font-size: 20px;
 }

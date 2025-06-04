@@ -17,7 +17,7 @@ function operate(num1, num2, operator) {
             return cal.sub(num1, num2);
         case "x":
             return cal.mul(num1, num2);
-        case " / ":
+        case "/":
             return cal.div(num1, num2);
         default:
     }
@@ -28,9 +28,37 @@ const numberButtons = document.querySelectorAll('.num');
 const operatorButtons = document.querySelectorAll('.operator');
 const displayScreen = document.querySelector('#display');
 const equalButton = document.querySelector('.equal');
+const topButtons = document.querySelectorAll('.topRow');
+
 let buttonsClicked = 0;
 let hasFirstNumber = false;
 let hasSecondNumber = false;
+let answer = 0;
+
+function topRowFunction(e) {
+    let tempNumber = Number(displayScreen.textContent);
+    switch (e.target.textContent) {
+        case "AC": 
+            hasFirstNumber, hasSecondNumber = false;
+            displayScreen.textContent = 0;
+            buttonsClicked = 0;
+            getNumber();
+            break;
+        case "+/-":
+            displayScreen.textContent = -(tempNumber); // need to test this out
+            break;
+        case "%":
+            displayScreen.textContent = tempNumber / 100; // this one also
+            break;
+        case "back":
+            displayScreen.textContent = displayScreen.textContent.slice(0, -1);
+            buttonsClicked--;
+    }
+};
+
+topButtons.forEach(button => {
+    button.addEventListener("click", topRowFunction);
+})
 
 function getNum(e) {
     if (buttonsClicked < 10 && hasFirstNumber == false) {
@@ -81,16 +109,43 @@ operatorButtons.forEach(button => {
     })
 });
 
+function checkDecimalAndDisplay(number) {
+    let numberLength = String(number).length;
+    console.log(numberLength);
+    if (!(Number.isInteger(number))) {
+        console.log(!(Number.isInteger(number)));
+        console.log(numberLength > 10);
+        if (numberLength > 10) {
+            displayScreen.textContent = number.toFixed(2);
+            console.log(number.toFixed(10));
+        } else {
+            displayScreen.textContent = number;
+        }
+    } else {
+        if (numberLength > 10) {
+            displayScreen.textContent = "Error";
+        } else {
+            displayScreen.textContent = number;
+        }
+    }
+}
+
 // Making the equal button to perform operation
 equalButton.addEventListener('click', () => {
     if (hasFirstNumber == true) {
         secondNumber = Number(displayScreen.textContent);
-        displayScreen.textContent = operate(firstNumber, secondNumber, op);
+        answer = operate(firstNumber, secondNumber, op);
+        checkDecimalAndDisplay(answer);
         hasFirstNumber = false;
+        buttonsClicked = 0;
     } else if (hasFirstNumber == false && op !== "") {
         secondNumber = Number(displayScreen.textContent);
-        displayScreen.textContent = operate(firstNumber, secondNumber, op);
+        answer = operate(firstNumber, secondNumber, op);
+        checkDecimalAndDisplay(answer);
+        buttonsClicked = 0;
     } else {
         return;
     }
 });
+
+// next step: make a function that checks if number is over 10 characters and fix it if so. then call in the equal button function
