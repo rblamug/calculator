@@ -33,6 +33,7 @@ const operatorButtons = document.querySelectorAll('.operator');
 const displayScreen = document.querySelector('#display');
 const equalButton = document.querySelector('.equal');
 const topButtons = document.querySelectorAll('.topRow');
+const decimalButton = document.querySelector('#decimal');
 
 let buttonsClicked = 0;
 let hasFirstNumber = false;
@@ -86,6 +87,17 @@ function getNum(e) {
     }
 }
 
+function checkForDecimal(e) {
+    if (!(displayScreen.textContent.includes('.'))) {
+        displayScreen.textContent += e.target.textContent;
+        buttonsClicked++;
+    } else {
+        return;
+    }
+}
+
+decimalButton.addEventListener('click', checkForDecimal);
+
 function getNumber() {
     numberButtons.forEach(button => {
         button.addEventListener('click', getNum);
@@ -117,6 +129,7 @@ operatorButtons.forEach(button => {
     })
 });
 
+// Stop overflowing
 function checkDecimalAndDisplay(number) {
     let numberLength = String(number).length;
     console.log(numberLength);
@@ -155,5 +168,3 @@ equalButton.addEventListener('click', () => {
         return;
     }
 });
-
-// next step: make a function that checks if number is over 10 characters and fix it if so. then call in the equal button function

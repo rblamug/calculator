@@ -38,7 +38,7 @@ div {
     border: none;
 }
 
-.num, .operator, .equal, .topRow{
+.num, .operator, .equal, .topRow, #decimal {
     width: 85px;
     height: 68px;
     font-size: 25px;
