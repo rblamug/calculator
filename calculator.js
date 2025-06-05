@@ -35,7 +35,20 @@ const equalButton = document.querySelector('.equal');
 const topButtons = document.querySelectorAll('.topRow');
 const decimalButton = document.querySelector('#decimal');
 
+function handleEvent(e) {
+    return e.type == 'click' ? e.target.textContent : e.key;
+}
+
+// Make sure the buttons clicked does not go over 10
 let buttonsClicked = 0;
+function clickDaButton() {
+    if (buttonsClicked < 10) {
+        buttonsClicked++;
+    } else {
+        return;
+    }
+}
+
 let hasFirstNumber = false;
 let hasSecondNumber = false;
 let answer = 0;
@@ -72,25 +85,24 @@ topButtons.forEach(button => {
 function getNum(e) {
     if (buttonsClicked < 10 && hasFirstNumber == false) {
         if (displayScreen.textContent == 0 || displayScreen.textContent == answer) {
-            displayScreen.textContent = e.target.textContent;
+            displayScreen.textContent = e.type == 'click' ? e.target.textContent : e.key;
         } else {
-            displayScreen.textContent += e.target.textContent;
+            displayScreen.textContent += e.type == 'click' ? e.target.textContent : e.key;
         }
-        buttonsClicked++;
     } else if (buttonsClicked < 10 && hasFirstNumber == true) {
         if(displayScreen.textContent == firstNumber) {
-            displayScreen.textContent = e.target.textContent;
+            displayScreen.textContent = e.type == 'click' ? e.target.textContent : e.key;
         } else {
-            displayScreen.textContent += e.target.textContent;
+            displayScreen.textContent += e.type == 'click' ? e.target.textContent : e.key;
         }
-        buttonsClicked++;
     }
+    clickDaButton();
 }
 
 function checkForDecimal(e) {
     if (!(displayScreen.textContent.includes('.'))) {
         displayScreen.textContent += e.target.textContent;
-        buttonsClicked++;
+        clickDaButton();
     } else {
         return;
     }
@@ -109,36 +121,36 @@ if(displayScreen.textContent == 0) {
     getNumber();
 }
 
-// Event Listeners for operator buttons 
-operatorButtons.forEach(button => {
-    button.addEventListener("click", (e) => {
-        if (hasFirstNumber == false) {
-            firstNumber = Number(displayScreen.textContent);
-            op = e.target.textContent;
-            hasFirstNumber = true;
-            buttonsClicked = 0;
-        } else if (hasFirstNumber == true && buttonsClicked > 0) {
-            secondNumber = Number(displayScreen.textContent);
-            firstNumber = operate(firstNumber, secondNumber, op);
-            op = e.target.textContent;
-            displayScreen.textContent = firstNumber;
-            buttonsClicked = 0;
-        } else {
-            return;
-        }
-    })
-});
+function handleOperator(e) {
+    if (hasFirstNumber == false) {
+        firstNumber = Number(displayScreen.textContent);
+        op = handleEvent(e);
+        console.log(op); // finish fixing operator handling function
+        hasFirstNumber = true;
+        buttonsClicked = 0;
+    } else if (hasFirstNumber == true && buttonsClicked > 0) {
+        secondNumber = Number(displayScreen.textContent);
+        firstNumber = operate(firstNumber, secondNumber, op);
+        op = handleEvent(e);
+        displayScreen.textContent = firstNumber;
+        buttonsClicked = 0;
+    } else {
+        return;
+    }
+}
 
-// Stop overflowing
+// Event Listener for operator buttons --- need to seperate function by itself and input depending on click or keydown
+operatorButtons.forEach(button => {
+    button.addEventListener('click', handleOperator);
+})
+
+// Stop overflowing... hopefully
 function checkDecimalAndDisplay(number) {
     let numberLength = String(number).length;
     console.log(numberLength);
     if (!(Number.isInteger(number))) {
-        console.log(!(Number.isInteger(number)));
-        console.log(numberLength > 10);
         if (numberLength > 10) {
             displayScreen.textContent = number.toFixed(2);
-            console.log(number.toFixed(10));
         } else {
             displayScreen.textContent = number;
         }
@@ -152,7 +164,7 @@ function checkDecimalAndDisplay(number) {
 }
 
 // Making the equal button to perform operation
-equalButton.addEventListener('click', () => {
+function equalEventHandler() {
     if (hasFirstNumber == true) {
         secondNumber = Number(displayScreen.textContent);
         answer = operate(firstNumber, secondNumber, op);
@@ -167,4 +179,27 @@ equalButton.addEventListener('click', () => {
     } else {
         return;
     }
-});
+}
+
+equalButton.addEventListener('click', equalEventHandler);
+
+// Adding keyboard support 
+function readKeyboard(e) {
+    console.log(e.key);
+    const availableNumberInputs = ["1","2","3","4","5","6","7","8","9","0"];
+    const availableOperatorInputs = ["+","-","*","/"];
+    if (availableNumberInputs.includes(e.key)) {
+        getNum(e);
+    } else if (availableOperatorInputs.includes(e.key)) {
+        handleOperator(e);
+    } else if (e.key == "Backspace") {
+        displayScreen.textContent = displayScreen.textContent.slice(0, -1);
+            if (buttonsClicked > 0) {
+                buttonsClicked--;
+            }
+    } else if (e.key == "Enter") {
+        equalEventHandler();
+    }
+}
+
+document.addEventListener('keydown', readKeyboard);
